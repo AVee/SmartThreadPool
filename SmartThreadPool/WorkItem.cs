@@ -210,9 +210,9 @@ namespace Amib.Threading.Internal
             _workItemInfo = workItemInfo;
 
 #if !(_WINDOWS_CE) && !(_SILVERLIGHT) && !(WINDOWS_PHONE)
-            if (_workItemInfo.UseCallerCallContext || _workItemInfo.UseCallerHttpContext)
+            if (_workItemInfo.UseCallerUserInfo || _workItemInfo.UseCallerHttpContext)
             {
-                _callerContext = CallerThreadContext.Capture(_workItemInfo.UseCallerCallContext, _workItemInfo.UseCallerHttpContext);
+                _callerContext = CallerThreadContext.Capture(_workItemInfo.UseCallerUserInfo, _workItemInfo.UseCallerHttpContext);
             }
 #endif
 
@@ -361,13 +361,13 @@ namespace Amib.Threading.Internal
         {
 
 #if !(_WINDOWS_CE) && !(_SILVERLIGHT) && !(WINDOWS_PHONE)
-            //CallerThreadContext ctc = null;
-            //if (null != _callerContext)
-            //{
+            CallerThreadContext ctc = null;
+            if (null != _callerContext)
+            {
 
-            //    ctc = CallerThreadContext.Capture(_callerContext.CapturedCallContext, _callerContext.CapturedHttpContext);
-            //    CallerThreadContext.Apply(_callerContext);
-            //}
+                ctc = CallerThreadContext.Capture(_callerContext.CapturedUserInfo, _callerContext.CapturedHttpContext);
+                CallerThreadContext.Apply(_callerContext);
+            }
 #endif
 
             Exception exception = null;
@@ -377,11 +377,7 @@ namespace Amib.Threading.Internal
             {
                 try
                 {
-                    //ContextCallback cb = new ContextCallback(result = callback(_state)
-                    if (null != _callerContext)
-                        ExecutionContext.Run(_callerContext._executionContext, (x) => { result = _callback(x); }, _state);
-                    else
-                        result = _callback(_state);
+                    result = _callback(_state);
                 }
                 catch (Exception e)
                 {
@@ -418,10 +414,10 @@ namespace Amib.Threading.Internal
             }
 
 #if !(_WINDOWS_CE) && !(_SILVERLIGHT) && !(WINDOWS_PHONE)
-            //if (null != _callerContext)
-            //{
-            //    CallerThreadContext.Apply(ctc);
-            //}
+            if (null != _callerContext)
+            {
+                CallerThreadContext.Apply(ctc);
+            }
 #endif
 
             if (!SmartThreadPool.IsWorkItemCanceled)

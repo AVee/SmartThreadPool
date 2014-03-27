@@ -3,6 +3,8 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.Security.Principal;
 using System.Threading;
 using System.Reflection;
 using System.Web;
@@ -20,13 +22,6 @@ namespace Amib.Threading.Internal
 	internal class CallerThreadContext 
 	{
 #region Prepare reflection information
-
-		// Cached type information.
-		private static readonly MethodInfo getLogicalCallContextMethodInfo =
-			typeof(Thread).GetMethod("GetLogicalCallContext", BindingFlags.Instance | BindingFlags.NonPublic);
-
-		private static readonly MethodInfo setLogicalCallContextMethodInfo =
-			typeof(Thread).GetMethod("SetLogicalCallContext", BindingFlags.Instance | BindingFlags.NonPublic);
 
 		private static string HttpContextSlotName = GetHttpContextSlotName();
 
@@ -47,8 +42,9 @@ namespace Amib.Threading.Internal
 #region Private fields
 
 		private HttpContext _httpContext;
-		//private LogicalCallContext _callContext;
-        public ExecutionContext _executionContext;
+        private IPrincipal _principal;
+        private CultureInfo _culture;
+        private CultureInfo _uiCulture;
 
         #endregion
 
@@ -59,11 +55,11 @@ namespace Amib.Threading.Internal
 		{
 		}
 
-		public bool CapturedCallContext
+		public bool CapturedUserInfo
 		{
 			get
 			{
-                return (null != _executionContext);
+                return (null != _culture);
 			}
 		}
 
@@ -80,23 +76,19 @@ namespace Amib.Threading.Internal
 		/// </summary>
 		/// <returns></returns>
 		public static CallerThreadContext Capture(
-			bool captureCallContext, 
+			bool captureUserInfo, 
 			bool captureHttpContext)
 		{
-			Debug.Assert(captureCallContext || captureHttpContext);
+			Debug.Assert(captureUserInfo || captureHttpContext);
 
 			CallerThreadContext callerThreadContext = new CallerThreadContext();
 
-			// TODO: In NET 2.0, redo using the new feature of ExecutionContext class - Capture()
-			// Capture Call Context
-            //if (captureCallContext && (getLogicalCallContextMethodInfo != null))
-            if (captureCallContext)
+            // Capture userinfo
+            if (captureUserInfo)
 			{
-                callerThreadContext._executionContext = ExecutionContext.Capture();
-                //if (callerThreadContext._callContext != null)
-                //{
-                //    callerThreadContext._callContext = (LogicalCallContext)callerThreadContext._callContext.Clone();
-                //}
+                callerThreadContext._principal = Thread.CurrentPrincipal;
+                callerThreadContext._culture = Thread.CurrentThread.CurrentCulture;
+                callerThreadContext._uiCulture = Thread.CurrentThread.CurrentUICulture;
 			}
 
 			// Capture httpContext
@@ -112,27 +104,28 @@ namespace Amib.Threading.Internal
 		/// Applies the thread context stored earlier
 		/// </summary>
 		/// <param name="callerThreadContext"></param>
-        //public static void Apply(CallerThreadContext callerThreadContext)
-        //{
-        //    if (null == callerThreadContext) 
-        //    {
-        //        throw new ArgumentNullException("callerThreadContext");			
-        //    }
+        public static void Apply(CallerThreadContext callerThreadContext)
+        {
+            if (null == callerThreadContext)
+            {
+                throw new ArgumentNullException("callerThreadContext");
+            }
 
-        //    // Todo: In NET 2.0, redo using the new feature of ExecutionContext class - Run()
-        //    // Restore call context
-        //    if ((callerThreadContext._callContext != null) && (setLogicalCallContextMethodInfo != null))
-        //    {
-        //        setLogicalCallContextMethodInfo.Invoke(Thread.CurrentThread, new object[] { callerThreadContext._callContext });
-        //    }
+            // Apply user information
+            if (callerThreadContext.CapturedUserInfo)
+            {
+                Thread.CurrentThread.CurrentCulture = callerThreadContext._culture;
+                Thread.CurrentThread.CurrentUICulture = callerThreadContext._uiCulture;
+                Thread.CurrentPrincipal = callerThreadContext._principal;
+            }
 
-        //    // Restore HttpContext 
-        //    if (callerThreadContext._httpContext != null)
-        //    {
-        //        HttpContext.Current = callerThreadContext._httpContext;
-        //        //CallContext.SetData(HttpContextSlotName, callerThreadContext._httpContext);
-        //    }
-        //}
+            // Restore HttpContext 
+            if (callerThreadContext._httpContext != null)
+            {
+                HttpContext.Current = callerThreadContext._httpContext;
+                //CallContext.SetData(HttpContextSlotName, callerThreadContext._httpContext);
+            }
+        }
 	}
 
     #endregion

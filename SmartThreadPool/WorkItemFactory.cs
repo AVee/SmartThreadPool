@@ -79,7 +79,7 @@ namespace Amib.Threading.Internal
 			ValidateCallback(callback);
             
 			WorkItemInfo workItemInfo = new WorkItemInfo();
-			workItemInfo.UseCallerCallContext = wigStartInfo.UseCallerCallContext;
+			workItemInfo.UseCallerUserInfo = wigStartInfo.UseCallerUserInfo;
 			workItemInfo.UseCallerHttpContext = wigStartInfo.UseCallerHttpContext;
 			workItemInfo.PostExecuteWorkItemCallback = wigStartInfo.PostExecuteWorkItemCallback;
 			workItemInfo.CallToPostExecute = wigStartInfo.CallToPostExecute;
@@ -115,7 +115,7 @@ namespace Amib.Threading.Internal
 			ValidateCallback(callback);
 
 			WorkItemInfo workItemInfo = new WorkItemInfo();
-			workItemInfo.UseCallerCallContext = wigStartInfo.UseCallerCallContext;
+			workItemInfo.UseCallerUserInfo = wigStartInfo.UseCallerUserInfo;
 			workItemInfo.UseCallerHttpContext = wigStartInfo.UseCallerHttpContext;
 			workItemInfo.PostExecuteWorkItemCallback = wigStartInfo.PostExecuteWorkItemCallback;
 			workItemInfo.CallToPostExecute = wigStartInfo.CallToPostExecute;
@@ -185,7 +185,7 @@ namespace Amib.Threading.Internal
 			ValidateCallback(postExecuteWorkItemCallback);
 
 			WorkItemInfo workItemInfo = new WorkItemInfo();
-			workItemInfo.UseCallerCallContext = wigStartInfo.UseCallerCallContext;
+			workItemInfo.UseCallerUserInfo = wigStartInfo.UseCallerUserInfo;
 			workItemInfo.UseCallerHttpContext = wigStartInfo.UseCallerHttpContext;
 			workItemInfo.PostExecuteWorkItemCallback = postExecuteWorkItemCallback;
 			workItemInfo.CallToPostExecute = wigStartInfo.CallToPostExecute;
@@ -227,7 +227,7 @@ namespace Amib.Threading.Internal
 			ValidateCallback(postExecuteWorkItemCallback);
 
 			WorkItemInfo workItemInfo = new WorkItemInfo();
-			workItemInfo.UseCallerCallContext = wigStartInfo.UseCallerCallContext;
+			workItemInfo.UseCallerUserInfo = wigStartInfo.UseCallerUserInfo;
 			workItemInfo.UseCallerHttpContext = wigStartInfo.UseCallerHttpContext;
 			workItemInfo.PostExecuteWorkItemCallback = postExecuteWorkItemCallback;
 			workItemInfo.CallToPostExecute = wigStartInfo.CallToPostExecute;
@@ -269,7 +269,7 @@ namespace Amib.Threading.Internal
 			ValidateCallback(postExecuteWorkItemCallback);
 
 			WorkItemInfo workItemInfo = new WorkItemInfo();
-			workItemInfo.UseCallerCallContext = wigStartInfo.UseCallerCallContext;
+			workItemInfo.UseCallerUserInfo = wigStartInfo.UseCallerUserInfo;
 			workItemInfo.UseCallerHttpContext = wigStartInfo.UseCallerHttpContext;
 			workItemInfo.PostExecuteWorkItemCallback = postExecuteWorkItemCallback;
 			workItemInfo.CallToPostExecute = callToPostExecute;
@@ -314,7 +314,7 @@ namespace Amib.Threading.Internal
 			ValidateCallback(postExecuteWorkItemCallback);
 
 			WorkItemInfo workItemInfo = new WorkItemInfo();
-			workItemInfo.UseCallerCallContext = wigStartInfo.UseCallerCallContext;
+			workItemInfo.UseCallerUserInfo = wigStartInfo.UseCallerUserInfo;
 			workItemInfo.UseCallerHttpContext = wigStartInfo.UseCallerHttpContext;
 			workItemInfo.PostExecuteWorkItemCallback = postExecuteWorkItemCallback;
 			workItemInfo.CallToPostExecute = callToPostExecute;

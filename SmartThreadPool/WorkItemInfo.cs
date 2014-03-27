@@ -9,7 +9,7 @@ namespace Amib.Threading
 	{
 	    public WorkItemInfo()
 		{
-			UseCallerCallContext = SmartThreadPool.DefaultUseCallerCallContext;
+			UseCallerUserInfo = SmartThreadPool.DefaultUseCallerUserInfo;
 			UseCallerHttpContext = SmartThreadPool.DefaultUseCallerHttpContext;
 			DisposeOfStateObjects = SmartThreadPool.DefaultDisposeOfStateObjects;
 			CallToPostExecute = SmartThreadPool.DefaultCallToPostExecute;
@@ -19,7 +19,7 @@ namespace Amib.Threading
 
 		public WorkItemInfo(WorkItemInfo workItemInfo)
 		{
-			UseCallerCallContext = workItemInfo.UseCallerCallContext;
+			UseCallerUserInfo = workItemInfo.UseCallerUserInfo;
 			UseCallerHttpContext = workItemInfo.UseCallerHttpContext;
 			DisposeOfStateObjects = workItemInfo.DisposeOfStateObjects;
 			CallToPostExecute = workItemInfo.CallToPostExecute;
@@ -29,9 +29,9 @@ namespace Amib.Threading
 		}
 
 	    /// <summary>
-	    /// Get/Set if to use the caller's security context
+	    /// Get/Set if to use the caller's principal and culture
 	    /// </summary>
-	    public bool UseCallerCallContext { get; set; }
+	    public bool UseCallerUserInfo { get; set; }
 
 	    /// <summary>
 	    /// Get/Set if to use the caller's HTTP context

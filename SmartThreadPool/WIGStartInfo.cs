@@ -7,7 +7,7 @@ namespace Amib.Threading
 	/// </summary>
 	public class WIGStartInfo
 	{
-        private bool _useCallerCallContext;
+        private bool _useCallerUserInfo;
         private bool _useCallerHttpContext;
         private bool _disposeOfStateObjects;
         private CallToPostExecute _callToPostExecute;
@@ -27,12 +27,12 @@ namespace Amib.Threading
             _callToPostExecute = SmartThreadPool.DefaultCallToPostExecute;
             _disposeOfStateObjects = SmartThreadPool.DefaultDisposeOfStateObjects;
             _useCallerHttpContext = SmartThreadPool.DefaultUseCallerHttpContext;
-            _useCallerCallContext = SmartThreadPool.DefaultUseCallerCallContext;
+            _useCallerUserInfo = SmartThreadPool.DefaultUseCallerUserInfo;
         }
 
 	    public WIGStartInfo(WIGStartInfo wigStartInfo)
         {
-            _useCallerCallContext = wigStartInfo.UseCallerCallContext;
+            _useCallerUserInfo = wigStartInfo.UseCallerUserInfo;
             _useCallerHttpContext = wigStartInfo.UseCallerHttpContext;
             _disposeOfStateObjects = wigStartInfo.DisposeOfStateObjects;
             _callToPostExecute = wigStartInfo.CallToPostExecute;
@@ -53,13 +53,13 @@ namespace Amib.Threading
 	    /// <summary>
 	    /// Get/Set if to use the caller's security context
 	    /// </summary>
-	    public virtual bool UseCallerCallContext
+	    public virtual bool UseCallerUserInfo
 	    {
-	        get { return _useCallerCallContext; }
+	        get { return _useCallerUserInfo; }
             set 
             { 
                 ThrowIfReadOnly();  
-                _useCallerCallContext = value; 
+                _useCallerUserInfo = value; 
             }
 	    }
 
